@@ -1,3 +1,4 @@
+import click
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
@@ -91,17 +92,29 @@ def ingest_data(
     print(f"Done. Loaded {total_rows:,} rows into '{target_table}'.")
 
 
-def main() -> None:
-    pg_user = 'root'
-    pg_pass = 'root'
-    pg_host = 'localhost'
-    pg_port = '5432'
-    pg_db = 'ny_taxi'
-    year = 2021
-    month = 1
-    read_chunksize = 100_000
-    write_chunksize = 10_000
-    target_table = 'yellow_taxi_data'
+@click.command()
+@click.option("--pg-user", default="root", show_default=True)
+@click.option("--pg-pass", default="root", show_default=True)
+@click.option("--pg-host", default="localhost", show_default=True)
+@click.option("--pg-port", default="5432", show_default=True)
+@click.option("--pg-db", default="ny_taxi", show_default=True)
+@click.option("--year", type=int, default=2021, show_default=True)
+@click.option("--month", type=int, default=1, show_default=True)
+@click.option("--read-chunksize", type=int, default=100_000, show_default=True)
+@click.option("--write-chunksize", type=int, default=10_000, show_default=True)
+@click.option("--target-table", default="yellow_taxi_data", show_default=True)
+def main(
+    pg_user: str,
+    pg_pass: str,
+    pg_host: str,
+    pg_port: str,
+    pg_db: str,
+    year: int,
+    month: int,
+    read_chunksize: int,
+    write_chunksize: int,
+    target_table: str,
+) -> None:
 
     engine = create_engine(
         f"postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}"
