@@ -16,8 +16,9 @@ COPY pyproject.toml .python-version uv.lock ./
 # Install deps inside container venv
 RUN uv sync --locked
 
-# copy your script
-COPY main.py .
+# copy your script and data
+COPY ../main.py .
+COPY ../data data/
 
 # run it
 ENTRYPOINT ["python", "main.py"]
