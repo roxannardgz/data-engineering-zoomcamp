@@ -2,12 +2,7 @@
 
 ### Overview
 This project demonstrates an end-to-end data ingestion workflow using Docker and Docker Compose.
-The goal is to load NYC taxi datasets into PostgreSQL, explore them, and query them using pgAdmin.
-
-- Start with a database stack, creating containers for Postgres and pgAdming from docker-compose.
-- Explore data locally using a notebook.
-- Convert exploration into a script.
-- Containerize ingestion as a batch job
+The goal is to load NYC taxi datasets into PostgreSQL, explore it, and query it using pgAdmin.
 
 
 ### Architecture
@@ -25,8 +20,7 @@ Runs a Python script as a one-off batch job: loads data into PostgreSQL and exit
 ### Workflow
 The workflow mirrors a realistic data engineering process:
 
-1. Database Stack (Docker Compose)
-
+1. Database Stack ([Docker Compose](./docker-compose.yml)).<br>
 The database stack is started first:
 
 ```
@@ -40,7 +34,7 @@ This launches:
 
 pgAdmin is accessed in the browser to inspect tables and run SQL queries.
 
-2. Data Exploration (Local, Notebook)
+2. Data Exploration (Local, [Notebook](./explore.ipynb))<br>
 Before ingestion, the datasets are explored locally using a Jupyter notebook:
 
 - Inspect schema
@@ -49,8 +43,8 @@ Before ingestion, the datasets are explored locally using a Jupyter notebook:
 
 This helps keep the ingestion script simple.
 
-3. Ingestion Script
-The ingestion logic is implemented in main.py:
+3. Ingestion [Script](./main.py).<br>
+The ingestion logic is implemented in [main.py](./main.py):
 - Reads taxi trip data (Parquet)
 - Reads zone lookup data (CSV)
 - Loads both into PostgreSQL using SQLAlchemy
@@ -58,7 +52,7 @@ The ingestion logic is implemented in main.py:
 
 Because the datasets are small, they are loaded without chunking.
 
-4. Containerized Ingestion
+4. Containerized Ingestion. <br>
 The ingestion script is containerized using a Dockerfile:
 
 - Uses python:3.13-slim
