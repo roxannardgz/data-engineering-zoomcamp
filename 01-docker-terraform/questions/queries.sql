@@ -1,14 +1,3 @@
--- Question 1
---What is the version of pip in the python:3.13 image?
-
--- Question 2
--- Given the docker-compose.yaml, what is the hostname and port that pgadmin should use to connect to the postgres database? 
-
-select count(*) from green_taxi_data;
-select * from green_taxi_data limit 1;
-
-select count(*) from zone_lookup
-
 -- Question 3. Counting short trips
 -- For the trips in November 2025, how many trips had a trip_distance of less than or equal to 1 mile?
 SELECT COUNT(*) 
@@ -37,13 +26,12 @@ LIMIT 1;
 WITH amount_per_location AS (
 	SELECT 
 		"PULocationID",
-		DATE("lpep_pickup_datetime"),
 		SUM(total_amount) AS amount
 	FROM 
 		green_taxi_data
 	WHERE DATE("lpep_pickup_datetime") = '2025-11-18'
-	GROUP BY  1, 2
-	ORDER BY 3 DESC
+	GROUP BY "PULocationID"
+	ORDER BY amount DESC
 	LIMIT 1
 )
 
@@ -55,7 +43,6 @@ JOIN amount_per_location l
 -- ans: "East Harlem North"
 
 
-
 --Question 6. Largest tip
 -- For the passengers picked up in the zone named "East Harlem North" in November 2025,
 -- which was the drop off zone that had the largest tip?
@@ -65,7 +52,7 @@ WITH trips_east_harlem_north AS (
 		MAX(tip_amount) AS largest_tip
 	FROM
 		green_taxi_data
-	WHERE "PULocationID" = (
+	WHERE "PULocationID" IN (
 		SELECT 
 			"LocationID"
 		FROM zone_lookup
@@ -79,7 +66,8 @@ SELECT
 	"Zone"
 FROM
 	zone_lookup
-WHERE "LocationID" = (SELECT "DOLocationID" FROM trips_east_harlem_north);
+JOIN trips_east_harlem_north t
+  ON z."LocationID" = t."DOLocationID";
 
 --ans "Yorkville West"
 
